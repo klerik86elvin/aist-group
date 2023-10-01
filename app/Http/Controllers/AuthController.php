@@ -16,7 +16,7 @@ class AuthController extends Controller
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware(['auth:api'], ['except' => ['login','register']]);
     }
     public function login(Request $request)
     {
@@ -64,7 +64,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::guard('api')->logout();
-        return response()->json(['message' => 'Successfully logged out'],204);
+        return response()->json(['message' => 'Successfully logged out'], 204);
     }
     public function refresh()
     {
