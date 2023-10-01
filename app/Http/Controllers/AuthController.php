@@ -27,6 +27,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         $token = JWTAuth::attempt($credentials);
+
         if (!$token) {
             return response()->json([
                 'status' => 'error',
@@ -34,16 +35,11 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = Auth::user();
-        try {
-            $userService = app(UserService::class);
-            // Используйте $userService
-        } catch (\Exception $e) {
-            // Обработка исключения
-            dd($e->getMessage()); // Вывод сообщения об ошибке
-        }
-        return response()->json(["user" => $this->userService->getUserById($user->id), "token" => $token]);
+        $user = auth()->user();
+
+        return response()->json(["user" => $user, "token" => $token]);
     }
+
     public function register(Request $request)
     {
        $validated = $request->validate([
