@@ -4,7 +4,7 @@
 namespace App\DAO;
 
 
-use App\DTO\CreateTicketDTO;
+use App\DTO\Ticket\CreateTicketDTO;
 use App\Models\Hall;
 use App\Models\Seat;
 use App\Models\Session;

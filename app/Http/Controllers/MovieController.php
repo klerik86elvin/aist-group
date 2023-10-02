@@ -25,7 +25,7 @@ class MovieController extends Controller
         return response()->json(['data' => $this->movieService->getActualMovies()]);
     }
 
-    public function create(MoviewRequest $request)
+    public function store(MoviewRequest $request)
     {
         $data = $request->validated();
         $movie = $this->movieService->createMovie($data);
@@ -50,6 +50,9 @@ class MovieController extends Controller
     }
     public function findByKeyword(Request $request)
     {
+        $request->validate([
+            'keyword'=>'required'
+        ]);
         $movies = $this->movieService->getMoviesByKeyword($request->keyword);
         return response()->json(['data' => $movies], 200);
     }

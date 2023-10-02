@@ -5,7 +5,7 @@ namespace App\Services;
 
 
 use App\DAO\HallDAO;
-use App\DTO\HallDTO;
+use App\DTO\Hall\HallDTO;
 
 class HallService
 {
@@ -28,6 +28,7 @@ class HallService
     public function createHall($data)
     {
         $hall = $this->hallDAO->createHall($data);
+        return $hall;
         return $this->convertHallModelToHallDTO($hall);
     }
     public function updateHall($data,$id)

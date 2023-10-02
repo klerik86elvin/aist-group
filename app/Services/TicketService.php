@@ -7,8 +7,8 @@ namespace App\Services;
 use App\DAO\SeatDAO;
 use App\DAO\SessionDAO;
 use App\DAO\TicketDAO;
-use App\DTO\CreateTicketDTO;
-use App\DTO\TicketDTO;
+use App\DTO\Ticket\CreateTicketDTO;
+use App\DTO\Ticket\TicketDTO;
 use App\Http\Resources\TicketResource;
 use App\Models\Hall;
 use App\Models\Ticket;
@@ -35,13 +35,21 @@ class TicketService
     }
     public function getAllTickets()
     {
-        return TicketResource::collection($this->ticketDAO->allTickets());
+        $ticketDTOs = [];
+        $tickets = $this->ticketDAO->allTickets();
+        foreach ($tickets as $ticket){
+            $dto = $this->convertTicketModelToDTO($ticket);
+            $ticketDTOs[] = $dto;
+        }
+        return $ticketDTOs;
     }
 
     public function findTicketById($id)
     {
         $ticket = $this->ticketDAO->getTicketById($id);
-        return new TicketResource($ticket);
+
+        $dto = $this->convertTicketModelToDTO($ticket);
+        return $dto;
     }
 
     public function deleteTicket($id)
@@ -63,9 +71,18 @@ class TicketService
             return $result;
         });
     }
-    public function returnTickets()
+    public function returnTickets($id)
     {
+        $price = $this->findTicketById($id)->price;
+        return DB::transaction(function () use($price, $id){
+            $this->ticketDAO->deleteTicket($id);
+            $this->userService->increment($price);
+        });
+    }
 
+    public function expired($id)
+    {
+        return $this->ticketDAO->expired($id);
     }
 
     public function createTicket(CreateTicketDTO $ticketDTO)
@@ -79,17 +96,23 @@ class TicketService
                 'seat_id' => $item
             ];
             $ticket = $this->ticketDAO->createTicket($data);
-            $dto = new TicketDTO(
-                $ticket->id,
-                $ticket->hall->name,
-                $ticket->session->movie->name,
-                $ticket->session->price->price,
-                $ticket->seat->row_number,
-                $ticket->seat->seat_number,
-                $ticket->session->date
-            );
+            $dto = $this->convertTicketModelToDTO($ticket);
             $ticketDTOs[] = $dto;
         }
         return $ticketDTOs;
+    }
+
+    private function convertTicketModelToDTO($ticket)
+    {
+        $dto = new TicketDTO(
+            $ticket->id,
+            $ticket->hall->name,
+            $ticket->session->movie->name,
+            $ticket->session->price->price,
+            $ticket->seat->row_number,
+            $ticket->seat->seat_number,
+            $ticket->session->date
+        );
+        return $dto;
     }
 }

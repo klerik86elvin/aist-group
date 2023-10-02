@@ -1,10 +1,7 @@
 <?php
 
 
-namespace App\DTO;
-
-
-use App\Models\Movie;
+namespace App\DTO\Movie;
 
 class MovieDTO
 {

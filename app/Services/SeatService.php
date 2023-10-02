@@ -5,9 +5,8 @@ namespace App\Services;
 
 
 use App\DAO\SeatDAO;
-use App\DTO\CreateTicketDTO;
+use App\DTO\Ticket\CreateTicketDTO;
 use App\DTO\SeatDTO;
-use App\Http\Resources\TicketResource;
 
 class SeatService
 {

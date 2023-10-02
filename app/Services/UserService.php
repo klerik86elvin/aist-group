@@ -5,18 +5,22 @@ namespace App\Services;
 
 
 use App\DAO\UserDAO;
-use App\DTO\TicketDTO;
+use App\DTO\Ticket\TicketDTO;
 use App\DTO\UserDTO;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\JWT;
 
 class UserService
 {
-    public $userService;
+    public $userDAO;
 
+    public function __construct(UserDAO $userDAO)
+    {
+        $this->userDAO = $userDAO;
+    }
     public function getAllUsers()
     {
-        $users = $this->userService->getAllUsers();
+        $users = $this->userDAO->getAllUsers();
         $userDTOs = [];
         foreach ($users as $user) {
             $userDTOs[] = new UserDTO(
@@ -31,16 +35,16 @@ class UserService
     }
     public function createUser($data)
     {
-        $user = $this->userService->createUser($data);
+        $user = $this->userDAO->createUser($data);
         return $user;
     }
     public function getUserById($id)
     {
-        return $this->userService->getUserById($id);
+        return $this->userDAO->getUserById($id);
     }
 
     public function getAuthUser(){
-        $user = $this->userService->getUserById(auth()->user()->id);
+        $user = $this->userDAO->getUserById(auth()->user()->id);
         return new UserDTO(
             $user->id,
             $user->first_name,
@@ -89,9 +93,8 @@ class UserService
         return $ticketsDTOs;
     }
 
-    public function belongToUser($ticketsId)
+    public function hasTicket($ticketsId)
     {
-        $tickets = $this->userService->getTickets();
-        return $tickets;
+        return $this->userDAO->hasTicket($ticketsId);
     }
 }

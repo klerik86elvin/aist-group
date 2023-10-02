@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\DTO;
+namespace App\DTO\Movie;
 
 
 use App\Models\Movie;

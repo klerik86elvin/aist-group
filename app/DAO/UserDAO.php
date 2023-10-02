@@ -26,6 +26,7 @@ class UserDAO
     public function createUser($data)
     {
         $user = User::create($data);
+        $user->refresh();
         return $user ? new UserDTO(
             $user->id,
             $user->first_name,
@@ -43,8 +44,13 @@ class UserDAO
     }
     public function getTickets()
     {
-        $tickets = JWTAuth::user()->tickets()->whereRelation('session', 'date', '>',Carbon::now())->with(['hall','session','seat'])->get();
+        $tickets = JWTAuth::user()->tickets()->with(['hall','session','seat'])->get();
         return $tickets;
     }
 
+    public function hasTicket($ticketId)
+    {
+        $user = JWTAuth::user();
+        return Ticket::where('id',$ticketId)->where('user_id', $user->id)->count() > 0;
+    }
 }

@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\CreateSessionDTO;
+use App\DTO\Session\CreateSessionDTO;
 use App\Http\Requests\SessionRequest;
-use App\Models\Session;
 use App\Services\SessionService;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 class SessionController extends Controller
 {
     private $sessionService;

@@ -1,11 +1,7 @@
 <?php
 
 
-namespace App\DTO;
-
-
-use App\Models\Session;
-
+namespace App\DTO\Session;
 class CreateSessionDTO
 {
     public $movie_id;

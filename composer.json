@@ -13,7 +13,6 @@
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "nesbot/carbon": "^2.71",
-        "nextapps/laravel-swagger-ui": "^0.8.0",
         "spatie/data-transfer-object": "^3.9",
         "tymon/jwt-auth": "^2.0"
     },

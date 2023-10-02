@@ -1,11 +1,8 @@
 <?php
 
 
-namespace App\DTO;
+namespace App\DTO\Hall;
 
-
-use App\Models\Hall;
-use function Nette\Utils\send;
 
 class HallDTO
 {

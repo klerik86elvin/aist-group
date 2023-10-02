@@ -1,11 +1,7 @@
 <?php
 
 
-namespace App\DTO;
-
-
-use App\DTO\SessionDTO;
-
+namespace App\DTO\Session;
 class SessionItemDTO extends SessionDTO
 {
     public $halls = [];

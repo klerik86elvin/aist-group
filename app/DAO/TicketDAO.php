@@ -4,22 +4,23 @@
 namespace App\DAO;
 
 
-use App\DTO\CreateTicketDTO;
+use App\DTO\Ticket\CreateTicketDTO;
 use App\Http\Resources\TicketResource;
 use App\Models\Session;
 use App\Models\Ticket;
+use Carbon\Carbon;
 
 class TicketDAO
 {
     public function allTickets()
     {
-        $tickets = Ticket::all();
+        $tickets = Ticket::with(['hall','session','seat'])->get();
         return $tickets;
     }
 
     public function getTicketById($id)
     {
-        $ticket = Ticket::findOrFial($id);
+        $ticket = Ticket::findOrFail($id);
         return $ticket;
     }
     public function getTicketsBySessionId($sessionId)
@@ -53,4 +54,9 @@ class TicketDAO
         return Session::find($ticketDTO->sessionId)->price->price * count($ticketDTO->seats);
     }
 
+    public function expired($ticketId)
+    {
+        $ticket = Ticket::with('session')->findOrFail($ticketId);
+        return $ticket->session->date <  Carbon::now()->addHours(5);
+    }
 }

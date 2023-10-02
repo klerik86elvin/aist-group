@@ -26,7 +26,7 @@ class HallRequest extends FormRequest
     {
         return [
             'name' => ['required'],
-            'seat_count' =>['nullable','numeric']
+            'seat_count' =>['required','numeric','max:30','min:1']
         ];
     }
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)

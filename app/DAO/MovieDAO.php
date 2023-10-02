@@ -7,6 +7,7 @@ namespace App\DAO;
 use App\DTO\MovieDTO;
 use App\Models\HallSession;
 use App\Models\Movie;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class MovieDAO
@@ -19,7 +20,9 @@ class MovieDAO
     public function getMovieById(int $id)
     {
 
-        $movie =  Movie::with('sessions')->findOrFail($id);
+        $movie =  Movie::with('sessions', function ($query) {
+           return $query->where('date','>',Carbon::now());
+        })->findOrFail($id);
         return $movie;
     }
     public function getAllMovies()
@@ -56,6 +59,7 @@ class MovieDAO
                 'h.seat_count',
                 'm.name',
                 'm.id',
+                'h.id'
             )
             ->havingRaw('COUNT(tickets.id) < h.seat_count')
             ->selectRaw('m.id as movie_id,m.name as movie_name,COUNT(tickets.id) as tickets')
@@ -63,7 +67,7 @@ class MovieDAO
 
         return $data;
     }
-    public function getActualMovieDetail($movieId)
+    public function getActualMovieSessions($movieId)
     {
         $data = HallSession::leftJoin('tickets', function($join) {
             $join->on('hall_session.session_id', '=', 'tickets.session_id')
@@ -80,13 +84,13 @@ class MovieDAO
                 's.id',
                 'h.id',
                 's.date',
-                'pr.price',
                 'h.name',
-                'm.name'
+                'pr.price'
             )
             ->havingRaw('COUNT(tickets.id) < h.seat_count')
-            ->selectRaw('m.id as movie_id,m.name as movie_name, s.id as session_id,h.id as hall_id, h.name as hall_name, s.date as date, pr.price as price')
+            ->selectRaw('COUNT(tickets.id) as count,m.id as movie_id,m.name as movie_name, s.id as session_id,h.id as hall_id,s.date as date,h.name as hall_name, pr.price')
             ->where('m.id', $movieId)
+            ->where('s.date', '>', Carbon::now())
             ->get();
 
         return $data;

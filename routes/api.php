@@ -23,8 +23,14 @@ Route::group([
     Route::post('register', [\App\Http\Controllers\AuthController::class, 'register']);
     Route::post('logout', [\App\Http\Controllers\AuthController::class, 'logout']);
     Route::post('refresh', [\App\Http\Controllers\AuthController::class, 'refresh']);
-    Route::post('getTickets', [\App\Http\Controllers\AuthController::class, 'getTickets']);
     Route::post('me', [\App\Http\Controllers\AuthController::class,'me']);
+});
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'user'
+], function () {
+   Route::get('tickets', [\App\Http\Controllers\UserController::class, 'getTickets']);
+   Route::delete('tickets/returnTicket/{id}', [\App\Http\Controllers\UserController::class, 'returnTicket']);
 });
 Route::group([
     'middleware' => 'api',
@@ -71,5 +77,4 @@ Route::group([
     Route::post('/', [\App\Http\Controllers\TicketController::class, 'byTicket']);
     Route::get('/{id}', [\App\Http\Controllers\TicketController::class, 'get'])->where('id', '[0-9]+');
     Route::put('/{id}', [\App\Http\Controllers\TicketController::class, 'update'])->where('id', '[0-9]+');
-    Route::delete('/{id}', [\App\Http\Controllers\TicketController::class, 'delete'])->where('id', '[0-9]+');
 });

@@ -2,10 +2,8 @@
 
 
 namespace App\DAO;
-
-
-use App\DTO\SessionDTO;
 use App\Models\Session;
+use Carbon\Carbon;
 
 class SessionDAO
 {
@@ -21,10 +19,15 @@ class SessionDAO
 
     public function getAllSessions()
     {
-        $sessions =  Session::with(['movie','halls','price'])->get();
+        $sessions =  Session::with(
+            ['movie','halls','price'])->get();
         return $sessions;
     }
 
+    public function getActualSessions()
+    {
+
+    }
     public function getSessionById($id)
     {
         $session = Session::findOrFail($id);
@@ -53,5 +56,17 @@ class SessionDAO
     {
         $count = Session::withOut(['movie','price'])->find($sessionId)->hall->seat_count;
         return $count;
+    }
+    public function isActual($id)
+    {
+        $session = Session::select('date')->findOrFail($id);
+        return $session->date > Carbon::now();
+    }
+    public function hasHall($sessionId,$hallId)
+    {
+        $hall = Session::whereHas('halls', function ($query) use($hallId){
+            $query->where('hall_id', $hallId);
+        })->where('id',$sessionId)->count() > 0;
+        return $hall;
     }
 }

@@ -5,13 +5,9 @@ namespace App\Services;
 
 
 use App\DAO\SessionDAO;
-use App\DTO\CreateSessionDTO;
-use App\DTO\HallDTO;
-use App\DTO\SessionDTO;
-use App\DTO\SessionItemDTO;
-use App\Http\Requests\SessionRequest;
-use App\Http\Resources\SessionResource;
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\DTO\Session\CreateSessionDTO;
+use App\DTO\Hall\HallDTO;
+use App\DTO\Session\SessionItemDTO;
 
 class SessionService
 {
@@ -77,5 +73,13 @@ class SessionService
             $hallsDTOs
         );
         return $dto;
+    }
+    public function isActual($sessionId)
+    {
+        return $this->sessionDAO->isActual($sessionId);
+    }
+    public function hasHall($sessionId, $hallId)
+    {
+        return $this->sessionDAO->hasHall($sessionId, $hallId);
     }
 }

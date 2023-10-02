@@ -5,9 +5,9 @@ namespace App\Services;
 
 
 use App\DAO\MovieDAO;
-use App\DTO\MovieDTO;
-use App\DTO\MovieItemDTO;
-use App\DTO\MovieSessionDTO;
+use App\DTO\Movie\MovieDTO;
+use App\DTO\Movie\MovieItemDTO;
+use App\DTO\Movie\MovieSessionDTO;
 use App\Http\Resources\MovieResource;
 
 class MovieService
@@ -40,19 +40,24 @@ class MovieService
     }
     public function getMovieById(int $id)
     {
-        $movies = $this->movieDAO->getActualMovieDetail($id);
+        $movies = $this->movieDAO->getActualMovieSessions($id);
         $movieSessionDTOs = $this->convertMovieSessionsModelToDTO($movies);
         return $movieSessionDTOs;
     }
     public function createMovie($data)
     {
         $movie = $this->movieDAO->createMovie($data);
-        return $movie;
+        $movieDTO = new MovieDTO($movie->id, $movie->name);
+        return $movieDTO;
     }
     public function getMoviesByKeyword(string $value)
     {
-        $moviesDTOs = $this->convertMovieSessionsModelToDTO($this->movieDAO->getMoviesByKeyword($value));
-        return $moviesDTOs;
+        $sessions = $this->movieDAO->getMoviesByKeyword($value);
+        $movieDTOs = [];
+        foreach ($sessions as $item) {
+            $movieDTOs[] = new MovieDTO($item->id,$item->name);
+        }
+        return $movieDTOs;
     }
     public function updateMovie($data, int $id)
     {

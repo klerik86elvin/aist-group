@@ -20,6 +20,16 @@ class HallController extends Controller
         $this->hallService = $hallService;
         $this->seatService = $seatService;
     }
+    /**
+     * @OA\Get(
+     *     path="/api/hall",
+     *     @OA\Response(response="200", description="Display a credential User."),
+     *     @OA\Response(response="201", description="Successful operation"),
+     *     @OA\Response(response="400", description="Bad Request"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden")
+     * )
+     */
     public function all()
     {
         return response()->json(['data' => $this->hallService->getAllHalls()]);
@@ -42,6 +52,26 @@ class HallController extends Controller
         }
         return response()->json(['data'=> 'error'], 400);
     }
+    /**
+     * @OA\Put(
+     *     path="/api/hall/{id}",
+     *
+     *     @OA\Parameter(
+     *          name="name",
+     *          description="name",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *     ),
+     *     @OA\Response(response="200", description="Display a credential User."),
+     *     @OA\Response(response="201", description="Successful operation"),
+     *     @OA\Response(response="400", description="Bad Request"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden")
+     * )
+     */
     public function update(HallRequest $request, $id)
     {
         $data = $request->validated();
@@ -51,6 +81,17 @@ class HallController extends Controller
         }
         return response()->json(['data' => 'not found'], 404);
     }
+    /**
+     * @OA\Delete(
+     *     path="/api/hall/{id}",
+     *
+     *     @OA\Response(response="200", description="Display a credential User."),
+     *     @OA\Response(response="201", description="Successful operation"),
+     *     @OA\Response(response="400", description="Bad Request"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden")
+     * )
+     */
     public function delete($id)
     {
         $result = $this->hallService->deleteHall($id);
