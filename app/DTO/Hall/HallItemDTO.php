@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\DTO;
+namespace App\DTO\Hall;
 
 
 class HallItemDTO extends HallDTO
